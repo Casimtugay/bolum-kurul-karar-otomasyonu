@@ -1,0 +1,19 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    pull_policy: never
+    platform: linux/amd64
+    container_name: kurul-db
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${KURUL_DB_PASSWORD:?Veritabani parolasi tanimlanmali}"
+    ports:
+      - "127.0.0.1:1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+volumes:
+  sql_data:
+    external: true
+    name: kurul_sql_data

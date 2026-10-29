@@ -1,0 +1,6 @@
+@Kurul.API_HostAddress = http://localhost:5020
+
+GET {{Kurul.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

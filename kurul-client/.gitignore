@@ -1,0 +1,100 @@
+# -------------------------
+# React / Node / Vite
+# -------------------------
+node_modules/
+dist/
+dist-ssr/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# -------------------------
+# .NET
+# -------------------------
+bin/
+obj/
+.vs/
+TestResults/
+artifacts/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.nupkg
+*.snupkg
+
+# Yayın sırasında gizli bilgiler içerebilir
+*.pubxml
+*.pubxml.user
+
+# -------------------------
+# Gizli ve yerel yapılandırmalar
+# -------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+*.local
+appsettings.Local.json
+appsettings.*.Local.json
+secrets.json
+
+# Sertifika / özel anahtar dosyaları
+*.pfx
+*.p12
+*.key
+*.pem
+
+# -------------------------
+# Yüklenen dosyalar ve yerel veriler
+# -------------------------
+Storage/
+storage/
+uploads/
+
+# SQL Server verileri ve yedekleri
+*.mdf
+*.ndf
+*.ldf
+*.bak
+*.bacpac
+*.trn
+
+# -------------------------
+# Projeye özel geçici klasörler
+# -------------------------
+/pdf-v2-code-backup-*/
+/KurulDB-Yedek/
+/Kurul-Yedekler/
+/Kurul-Ek-GeriYukleme-*/
+/KurulChecks_*/
+
+# -------------------------
+# Loglar
+# -------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# -------------------------
+# Editör / işletim sistemi
+# -------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+._*
+__MACOSX/
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# Kök dizindeki geçici deneme dosyası
+/test.txt

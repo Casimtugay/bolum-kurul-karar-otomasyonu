@@ -1,0 +1,61 @@
+# macOS
+.DS_Store
+__MACOSX/
+
+# .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+TestResults/
+
+# Yayın çıktıları
+artifacts/
+
+# Yüklenen ek dosyalar (kişisel veri içerebilir)
+Kurul.API/Storage/
+
+# Node
+node_modules/
+kurul-client/dist/
+npm-debug.log*
+
+# Ortam değişkenleri ve gizli dosyalar
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+*.pfx
+*.pem
+*.key
+
+# Yedekler ve veritabanı dosyaları
+*.bak
+*.mdf
+*.ldf
+*.tar.gz
+Kurul-Yedekler/
+
+# Loglar
+*.log
+
+# Editör
+.idea/
+.vscode/
+
+# Yayın paketleri ve derlenmiş arayüz kopyası (gizli ayar içerebilir)
+publish/
+publish-fd/
+Kurul.API/wwwroot/
+
+# Yerel araç/yedek klasörleri
+.serena/
+.yedek/
+
+# Dağıtım betiklerinin FTP bilgileri
+scripts/deploy.local.json
+
+# Yerel araç ayarları ve yapay zekâ çalışma notları (depoya girmez)
+.claude/
+ANTIGRAVITY_GECMIS.md
