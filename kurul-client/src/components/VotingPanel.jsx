@@ -21,6 +21,7 @@ import AttachmentPreviewDialog, { previewKind } from './AttachmentPreviewDialog'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 
 import DraftDecisionDialog from './DraftDecisionDialog';
+import { columnWidths } from '../data/decisionTable';
 import DecisionLifecyclePanel from './DecisionLifecyclePanel';
 import PageLayout from './PageLayout';
 import StatusChip from './StatusChip';
@@ -265,6 +266,7 @@ function VotingPanelContent({ id }) {
   );
 
   const outcome = decision.oySonucu || '';
+  const tableWidths = columnWidths(decision.tableColumns || []);
   const kararText = (decision.karar || decision.konu || '').replaceAll(
     '{OY_SONUCU}',
     outcome || '[oylama sonucu]'
@@ -911,12 +913,12 @@ function VotingPanelContent({ id }) {
           {decision.tableColumns?.length > 0 && (
             <Box sx={{ mt: 3, overflowX: 'auto' }}>
               <Typography variant="subtitle2" sx={{ mb: 1.5, color: NAVY, fontWeight: 800 }}>Karar Tablosu</Typography>
-              <Table size="small">
+              <Table size="small" sx={{ tableLayout: 'fixed', minWidth: decision.tableColumns.length * 110 + 48 }}>
                 <TableHead sx={{ bgcolor: '#f1f5f9' }}>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 800, color: NAVY }}>#</TableCell>
+                    <TableCell sx={{ fontWeight: 800, color: NAVY, width: 48 }}>#</TableCell>
                     {decision.tableColumns.map((column, index) => (
-                      <TableCell key={`${column.key}-${index}`} sx={{ fontWeight: 800, color: NAVY }}>{column.label}</TableCell>
+                      <TableCell key={`${column.key}-${index}`} sx={{ fontWeight: 800, color: NAVY, width: `${tableWidths[index]}%` }}>{column.label}</TableCell>
                     ))}
                   </TableRow>
                 </TableHead>

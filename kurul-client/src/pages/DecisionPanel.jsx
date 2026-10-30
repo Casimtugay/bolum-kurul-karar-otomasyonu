@@ -30,6 +30,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 import PageLayout from '../components/PageLayout';
 import DecisionForm from '../components/DecisionForm';
+import FormSection from '../components/FormSection';
 import TemplateEditor from '../components/TemplateEditor';
 import { listTemplates } from '../api/templates';
 import { templatesByUnit, getTemplateDetails } from '../data/templateData';
@@ -237,6 +238,9 @@ function DecisionWizard({ unit }) {
     if (!(Number(meetingNo) > 0)) return 'Geçerli bir toplantı numarası girin.';
     if (!gundem.trim()) return 'Gündem konusu zorunludur.';
     if (!kararMetni.trim()) return 'Karar metni zorunludur.';
+    if (tableColumns.some((c) => !String(c.label ?? '').trim())) {
+      return 'Karar tablosundaki her sütunun bir başlığı olmalıdır.';
+    }
     if (members) {
       if (attendeeIds.length === 0) return 'Toplantıya katılan en az bir üye seçin.';
       const chair = members.find((m) => m.isChair);
@@ -415,11 +419,13 @@ function DecisionWizard({ unit }) {
           />
 
           {members && (
-            <AttendeesCard
-              members={members}
-              selected={attendeeIds}
-              onChange={setAttendeeIds}
-            />
+            <Box sx={{ mt: 1.5 }}>
+              <AttendeesCard
+                members={members}
+                selected={attendeeIds}
+                onChange={setAttendeeIds}
+              />
+            </Box>
           )}
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 3, flexWrap: 'wrap' }}>
@@ -546,17 +552,16 @@ function AttendeesCard({ members, selected, onChange }) {
     onChange(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
 
   return (
-    <Paper elevation={0} sx={{ ...cardSx, mt: 3 }}>
+    <FormSection
+      title="Toplantıya Katılan Üyeler"
+      status={selected.length ? 'done' : 'missing'}
+      summary={`${selected.length} / ${members.length} üye seçili`}
+    >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2, flexWrap: 'wrap', mb: 1 }}>
-        <Box>
-          <Typography sx={{ color: TITLE, fontWeight: 800, fontSize: '1.05rem' }}>
-            Toplantıya katılan üyeler
-          </Typography>
-          <Typography variant="body2" sx={{ color: '#64748b' }}>
-            Yalnızca seçtikleriniz PDF'de imza kutusu alır ve oylamaya katılır. Seçilmeyenler
-            belgede yer almaz.
-          </Typography>
-        </Box>
+        <Typography variant="body2" sx={{ color: '#64748b' }}>
+          Yalnızca seçtikleriniz PDF'de imza kutusu alır ve oylamaya katılır. Seçilmeyenler
+          belgede yer almaz.
+        </Typography>
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
           <Typography variant="body2" sx={{ color: '#475569', fontWeight: 600 }}>
             {selected.length} / {members.length} seçili
@@ -611,7 +616,7 @@ function AttendeesCard({ members, selected, onChange }) {
           );
         })}
       </Box>
-    </Paper>
+    </FormSection>
   );
 }
 

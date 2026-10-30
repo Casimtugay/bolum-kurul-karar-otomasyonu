@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Alert,
-  Badge,
   Box,
   Button,
   Chip,
@@ -27,13 +26,20 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import TableChartIcon from '@mui/icons-material/TableChart';
 
 import { getTemplateDetails } from '../data/templateData';
 import DecisionTable from './DecisionTable';
+import { createTable } from '../data/decisionTable';
+import FormSection from './FormSection';
 import { NAVY, YELLOW, BLUE, TITLE, SOFT, BORDER } from '../styles/adminTheme';
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
+
+const formatDate = (iso) => {
+  const [y, m, d] = (iso || '').split('-');
+  return y && m && d ? `${d}.${m}.${y}` : 'Tarih seçilmedi';
+};
 
 export default function DecisionForm({
   templates = [],
@@ -68,6 +74,7 @@ export default function DecisionForm({
   const [templatesOpen, setTemplatesOpen] = useState(false);
   const [pendingTemplate, setPendingTemplate] = useState(null);
   const [fileError, setFileError] = useState('');
+  const [removeTableOpen, setRemoveTableOpen] = useState(false);
 
   const query = search.trim().toLocaleLowerCase('tr-TR');
 
@@ -397,7 +404,7 @@ export default function DecisionForm({
             minWidth: 0,
             display: 'flex',
             flexDirection: 'column',
-            gap: 3,
+            gap: 1.5,
           }}
         >
           {/* SEÇİLİ ŞABLON BİLGİ ŞERİDİ */}
@@ -447,20 +454,13 @@ export default function DecisionForm({
             )}
           </Paper>
 
-          {/* KART 1: GENEL KARAR BİLGİLERİ */}
-          <Paper
-            elevation={0}
-            sx={{
-              p: { xs: 2, md: 3 },
-              borderRadius: 3,
-              border: `1px solid ${BORDER}`,
-              bgcolor: '#ffffff',
-            }}
+          {/* BÖLÜM 1: GENEL KARAR BİLGİLERİ */}
+          <FormSection
+            title="Genel Karar Bilgileri"
+            defaultExpanded
+            status={meetingDate && gundem.trim() ? 'done' : 'missing'}
+            summary={gundem.trim() ? `${formatDate(meetingDate)}${meetingNo ? ` · Toplantı ${meetingNo}` : ''} · ${gundem.trim()}` : 'Gündem konusu yazılmadı'}
           >
-            <Typography sx={{ fontWeight: 800, color: NAVY, mb: 2, fontSize: '0.95rem' }}>
-              Genel Karar Bilgileri
-            </Typography>
-
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: setMeetingNo ? '1fr 1fr 1fr' : '1fr 1fr' }, gap: 2.5, mb: 2.5 }}>
               <TextField
                 fullWidth
@@ -520,22 +520,14 @@ export default function DecisionForm({
               onChange={(event) => setGundem(event.target.value)}
               helperText="Tutanakta ve toplantı duyurusunda yer alacak ana konu başlığı"
             />
-          </Paper>
+          </FormSection>
 
-          {/* KART 2: KARAR METNİ VE TABLO */}
-          <Paper
-            elevation={0}
-            sx={{
-              p: { xs: 2, md: 3 },
-              borderRadius: 3,
-              border: `1px solid ${BORDER}`,
-              bgcolor: '#ffffff',
-            }}
+          {/* BÖLÜM 2: KARAR METNİ */}
+          <FormSection
+            title="Karar Metni"
+            status={kararMetni.trim() ? 'done' : 'missing'}
+            summary={kararMetni.trim() ? `${kararMetni.trim().split(/\s+/).length} kelime` : 'Karar metni yazılmadı'}
           >
-            <Typography sx={{ fontWeight: 800, color: NAVY, mb: 2, fontSize: '0.95rem' }}>
-              Karar Metni ve Tablo
-            </Typography>
-
             <TextField
               fullWidth
               required
@@ -549,71 +541,57 @@ export default function DecisionForm({
               helperText={
                 '{OY_SONUCU} ibaresi, oylama tamamlandığında otomatik olarak "oy birliğiyle" veya "oy çokluğuyla" olarak yazılacaktır.'
               }
-              sx={{ mb: tableColumns.length > 0 ? 3 : 0 }}
             />
+          </FormSection>
 
-            {tableColumns.length > 0 && (
-              <Box sx={{ mt: 2 }}>
-                <Divider sx={{ mb: 2 }} />
-                <Typography
-                  sx={{ color: NAVY, fontWeight: 800, mb: 1.5, fontSize: '0.9rem' }}
-                >
-                  Karara Ait Veri Tablosu
+          {/* BÖLÜM 3: KARAR TABLOSU (İSTEĞE BAĞLI) */}
+          <FormSection
+            title="Karar Tablosu"
+            status={tableColumns.length > 0 ? 'done' : undefined}
+            summary={tableColumns.length > 0
+              ? `${tableColumns.length} sütun · ${tableRows.length} satır`
+              : 'Tablo yok (isteğe bağlı)'}
+          >
+            {tableColumns.length > 0 ? (
+              <DecisionTable
+                columns={tableColumns}
+                setColumns={disabled ? undefined : setTableColumns}
+                rows={tableRows}
+                setRows={(next) => {
+                  if (!disabled) setTableRows(next);
+                }}
+                onRemove={() => setRemoveTableOpen(true)}
+                disabled={disabled}
+              />
+            ) : (
+              <Box sx={{ p: 2.5, border: `2px dashed #b9c9e0`, borderRadius: 2.5, bgcolor: '#f8fafc', textAlign: 'center' }}>
+                <Typography variant="body2" sx={{ color: '#475569', mb: 1.5 }}>
+                  Karara öğrenci listesi, ders dağılımı gibi bir tablo eklemek için tablo oluşturun.
+                  Sütun başlıklarını, sütun ve satır sayısını ve sütun genişliklerini kendiniz belirlersiniz.
                 </Typography>
-
-                <Box sx={{ overflowX: 'auto', maxWidth: '100%' }}>
-                  <DecisionTable
-                    columns={tableColumns}
-                    rows={tableRows}
-                    setRows={(next) => {
-                      if (!disabled) setTableRows(next);
-                    }}
-                  />
-                </Box>
+                <Button
+                  variant="outlined"
+                  disabled={disabled}
+                  startIcon={<TableChartIcon />}
+                  onClick={() => {
+                    const table = createTable();
+                    setTableColumns(table.columns);
+                    setTableRows(table.rows);
+                  }}
+                  sx={{ textTransform: 'none', fontWeight: 700, color: BLUE, borderColor: BLUE }}
+                >
+                  Tablo Oluştur
+                </Button>
               </Box>
             )}
-          </Paper>
+          </FormSection>
 
-          {/* KART 3: EKLER VE BELGELER */}
-          <Paper
-            elevation={0}
-            sx={{
-              p: { xs: 2, md: 3 },
-              borderRadius: 3,
-              border: `1px solid ${BORDER}`,
-              bgcolor: '#ffffff',
-            }}
+          {/* BÖLÜM 4: EKLER VE BELGELER */}
+          <FormSection
+            title="Ekler ve Belgeler"
+            status={attachments.length || eklerMetni.trim() ? 'done' : undefined}
+            summary={attachments.length ? `${attachments.length} dosya eklendi` : 'Ek yok (isteğe bağlı)'}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: 1.5,
-                mb: 2,
-              }}
-            >
-              <Typography sx={{ fontWeight: 800, color: NAVY, fontSize: '0.95rem' }}>
-                Ekler ve Belgeler
-              </Typography>
-
-              {attachments.length > 0 && (
-                <Badge
-                  badgeContent={attachments.length}
-                  color="primary"
-                  sx={{ '& .MuiBadge-badge': { bgcolor: BLUE, fontWeight: 800 } }}
-                >
-                  <Chip
-                    icon={<AttachFileIcon sx={{ fontSize: 18 }} />}
-                    label={`${attachments.length} Dosya Eklendi`}
-                    size="small"
-                    sx={{ bgcolor: SOFT, color: BLUE, fontWeight: 700 }}
-                  />
-                </Badge>
-              )}
-            </Box>
-
             <TextField
               fullWidth
               multiline
@@ -732,9 +710,33 @@ export default function DecisionForm({
                 </Box>
               )}
             </Box>
-          </Paper>
+          </FormSection>
         </Box>
       </Box>
+
+      {/* TABLOYU KALDIRMA ONAYI */}
+      <Dialog open={removeTableOpen} onClose={() => setRemoveTableOpen(false)} fullWidth maxWidth="xs"
+        PaperProps={{ sx: { borderRadius: 3 } }}>
+        <DialogTitle sx={{ color: NAVY, fontWeight: 800 }}>Tablo kaldırılsın mı?</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ lineHeight: 1.8, color: '#475569' }}>
+            Tablonun tüm sütunları ve satırlarına yazdıklarınız silinecek.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, px: 3 }}>
+          <Button onClick={() => setRemoveTableOpen(false)} sx={{ color: '#64748b', textTransform: 'none', fontWeight: 600 }}>
+            Vazgeç
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => { setTableColumns([]); setTableRows([]); setRemoveTableOpen(false); }}
+            sx={{ textTransform: 'none', fontWeight: 800, borderRadius: 2 }}
+          >
+            Tabloyu Kaldır
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* ŞABLON DEĞİŞTİRME ONAY DİYALOĞU */}
       <Dialog

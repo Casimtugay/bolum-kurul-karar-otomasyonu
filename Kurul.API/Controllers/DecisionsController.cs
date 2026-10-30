@@ -258,6 +258,12 @@ public class DecisionsController : ControllerBase
                     !col.TryGetProperty("label", out var label) ||
                     label.ValueKind != JsonValueKind.String)
                     return false;
+
+                // İsteğe bağlı sütun genişliği (yüzde).
+                if (col.TryGetProperty("width", out var width) &&
+                    (width.ValueKind != JsonValueKind.Number ||
+                     !width.TryGetDouble(out var w) || w <= 0 || w > 100))
+                    return false;
             }
 
             foreach (var row in r.RootElement.EnumerateArray())

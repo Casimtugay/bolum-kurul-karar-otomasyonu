@@ -13,7 +13,8 @@ public static class DecisionPdfRenderer
     private static readonly CultureInfo Turkish =
         CultureInfo.GetCultureInfo("tr-TR");
 
-    private sealed record TableColumn(string Key, string Label);
+    // Width: arayüzde ayarlanan göreli genişlik (yüzde); eski kayıtlarda yoktur.
+    private sealed record TableColumn(string Key, string Label, double? Width);
 
     static DecisionPdfRenderer()
     {
@@ -214,12 +215,16 @@ public static class DecisionPdfRenderer
                     {
                         body.Item().Table(table =>
                         {
+                            // Genişliği olmayan sütunlar diğerlerinin ortalamasını alır (arayüzle aynı kural).
+                            var known = columns.Where(col => col.Width.HasValue).Select(col => col.Width!.Value).ToList();
+                            var fallback = known.Count > 0 ? known.Average() : 1;
+
                             table.ColumnsDefinition(c =>
                             {
                                 c.ConstantColumn(30);
 
                                 foreach (var column in columns)
-                                    c.RelativeColumn();
+                                    c.RelativeColumn((float)(column.Width ?? fallback));
                             });
 
                             // Başlık sonraki sayfalarda da tekrarlanır.
@@ -505,9 +510,16 @@ public static class DecisionPdfRenderer
                     "Tablo sütununun anahtar veya başlık bilgisi geçersiz.");
             }
 
+            double? width = item.TryGetProperty("width", out var w) &&
+                w.ValueKind == JsonValueKind.Number &&
+                w.TryGetDouble(out var value) && value > 0 && value <= 100
+                    ? value
+                    : null;
+
             result.Add(new TableColumn(
                 key.GetString()!,
-                label.GetString() ?? ""));
+                label.GetString() ?? "",
+                width));
         }
 
         if (result.Select(c => c.Key).Distinct().Count() != result.Count)

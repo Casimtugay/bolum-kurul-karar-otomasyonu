@@ -57,7 +57,9 @@ const SECTIONS = [
     steps: [
       '“Yeni Karar” sayfasını açın. Hazırlık üç adımdan oluşur: şablon seçimi, bilgilerin doldurulması, PDF önizleme ve oylamaya sunma.',
       'Şablon seçin: hazır şablonlardan biri, kurulunuzun eklediği bir şablon veya boş karar.',
-      'Toplantı tarihini ve numarasını kontrol edin; İlgi, Gündem Konusu, Karar Metni ve Ekler alanlarını doldurun. Gerekiyorsa karar tablosuna satır ekleyin ve ek dosyaları seçin.',
+      'Form; Genel Karar Bilgileri, Karar Metni, Karar Tablosu, Ekler ve Toplantıya Katılan Üyeler bölümlerinden oluşur. Bir bölümün başlığına tıklayarak açıp kapatabilirsiniz; kapalıyken sağ tarafta kısa özeti görünür.',
+      'Toplantı tarihini ve numarasını kontrol edin; İlgi, Gündem Konusu ve Karar Metni alanlarını doldurun, gerekiyorsa ek dosyaları seçin.',
+      'Karar Tablosu bölümünde "Tablo Oluştur" ile kendi tablonuzu kurabilirsiniz. Sütun ve satır ekleyip silebilir, sütun başlığına tıklayıp adını değiştirebilir, başlıklar arasındaki çizgiyi sürükleyerek sütun genişliğini ayarlayabilirsiniz. Sütun ve satırların "⋮" menüsünden taşıma ve araya ekleme yapılır. PDF\'de tablo aynı oranlarla basılır.',
       '“Toplantıya katılan üyeler” listesinden toplantıya katılan üyeleri işaretleyin. Kurul başkanının seçili olması zorunludur.',
       'Yalnızca seçilen üyeler oy kullanır ve PDF’te imza kutusu alır. Seçilmeyen üyeler belgede yer almaz.',
       'PDF önizleme adımında belgeyi kontrol edin. “PDF’yi indir” ile önizlemeyi bilgisayarınıza kaydedebilirsiniz.',
