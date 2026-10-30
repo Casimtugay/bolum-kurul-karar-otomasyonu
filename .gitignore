@@ -59,3 +59,4 @@ scripts/deploy.local.json
 # Yerel araç ayarları ve yapay zekâ çalışma notları (depoya girmez)
 .claude/
 ANTIGRAVITY_GECMIS.md
+yayin-paketi/

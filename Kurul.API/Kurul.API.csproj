@@ -5,6 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>270be88b-821c-4b23-8985-4639dd2aafa1</UserSecretsId>
+    <!-- Paylaşımlı barındırmanın (MonsterASP ücretsiz plan: 32-bit, sınırlı bellek) uygulama havuzunda
+         Server GC açılışta gereğinden fazla bellek ayırır; iş istasyonu GC'si kullanılır. -->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>

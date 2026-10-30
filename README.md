@@ -630,8 +630,15 @@ yönlendirmeye dahil edilmemelidir.
 Backend yayın çıktısı:
 
 ```bash
-dotnet publish Kurul.API/Kurul.API.csproj -c Release -o artifacts/api
+dotnet publish Kurul.API/Kurul.API.csproj -c Release -r win-x64 --self-contained false -o yayin-paketi
 ```
+
+Paket 64-bit Windows içindir; IIS uygulama havuzu da **64 bit** olmalıdır. 32-bit havuzda
+uygulama açılmaz (HTTP 500.30, `BadImageFormatException`: derleme mimarisi uyumsuz).
+QuestPDF yerel kütüphaneleri mimariye özel olduğu için paket ve havuz mimarisi aynı olmalıdır.
+
+MonsterASP'e yükleme: `scripts/deploy_ftp.ps1` (FTP bilgileri git'e girmeyen
+`scripts/deploy.local.json` dosyasından okunur). Canlı adres: https://bolumkurulotomasyon.runasp.net
 
 Frontend yayın çıktısı:
 
