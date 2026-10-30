@@ -228,7 +228,7 @@ public class UserManagementController : ControllerBase
     }
 
     // Yeni kullanıcılar için tahmin edilemez geçici parola.
-    // Kullanıcı ilk girişte parolasını değiştirmek zorundadır (MustChangePassword).
+    // Kullanıcı isterse "Parolamı Değiştir" sayfasından kendi parolasını belirler.
     private static string GenerateTemporaryPassword()
     {
         const string chars =
@@ -472,8 +472,7 @@ public class UserManagementController : ControllerBase
                 Username = username,
                 Email = email,
                 PhoneNumber = req.PhoneNumber?.Trim(),
-                IsActive = true,
-                MustChangePassword = true
+                IsActive = true
             };
 
             user.PasswordHash =
@@ -756,7 +755,6 @@ public class UserManagementController : ControllerBase
             return Err(400, "Parola 8–128 karakter olmalıdır.");
         }
 
-        membership.User.MustChangePassword = true;
         membership.User.SessionStamp = Guid.NewGuid();
         membership.User.PasswordHash =
             Hasher.HashPassword(membership.User, req.NewPassword);

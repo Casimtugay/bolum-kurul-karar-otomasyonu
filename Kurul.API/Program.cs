@@ -191,8 +191,7 @@ builder.Services
                     {
                         u.IsActive,
                         u.Role,
-                        u.SessionStamp,
-                        u.MustChangePassword
+                        u.SessionStamp
                     })
                     .SingleOrDefaultAsync(ct);
 
@@ -208,8 +207,6 @@ builder.Services
                         "Hesap veya parola değişmiş. Yeniden giriş gerekli.");
                     return;
                 }
-
-                context.HttpContext.Items["MustChangePassword"] = user.MustChangePassword;
 
                 var tokenRole =
                     principal.FindFirstValue(ClaimTypes.Role);
@@ -538,23 +535,6 @@ app.UseRouting();
 app.UseCors("Frontend");
 app.UseRateLimiter();
 app.UseAuthentication();
-// Bayrak her istekte veritabanından okunur; istemci veya token alanına güvenilmez.
-app.Use(async (context, next) =>
-{
-    if (context.User.Identity?.IsAuthenticated == true &&
-        context.Items["MustChangePassword"] is true &&
-        context.GetEndpoint()?.Metadata.GetMetadata<AllowPasswordChangeAttribute>() == null)
-    {
-        context.Response.StatusCode = StatusCodes.Status403Forbidden;
-        await context.Response.WriteAsJsonAsync(new
-        {
-            error = "Devam etmek için parolanızı değiştirin.",
-            code = "PASSWORD_CHANGE_REQUIRED"
-        });
-        return;
-    }
-    await next();
-});
 app.UseAuthorization();
 
 app.MapControllers();

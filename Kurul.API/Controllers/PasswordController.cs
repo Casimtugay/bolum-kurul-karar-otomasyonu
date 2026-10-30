@@ -28,17 +28,16 @@ public class PasswordController : ControllerBase
             u => u.Id == id && u.IsActive && u.SessionStamp == stamp, ct);
     }
 
+    // İlk girişte parola değiştirme zorunluluğu yoktur; alan istemci uyumu için hep false döner.
     [HttpGet("status")]
-    [AllowPasswordChange]
     public async Task<IActionResult> Status(CancellationToken ct)
     {
         var user = await CurrentAsync(ct);
         return user == null ? Unauthorized(new { error = "Oturum geçersiz. Tekrar giriş yapın." })
-            : Ok(new { mustChangePassword = user.MustChangePassword });
+            : Ok(new { mustChangePassword = false });
     }
 
     [HttpPost]
-    [AllowPasswordChange]
     [EnableRateLimiting("login")]
     public async Task<IActionResult> Change(ChangeRequest req, CancellationToken ct)
     {

@@ -159,7 +159,7 @@ const SECTIONS = [
     steps: [
       'Sağ üstteki hesap menüsünden “Parolamı Değiştir” ve “İmzam” sayfalarını açabilirsiniz.',
       '“İmzam” sayfasında imza görselinizi bir kez yükleyip kaydedin; kararları imzalarken hazır gelir.',
-      'Parolanızı unuttuysanız giriş ekranındaki “Şifremi Unuttum” açıklamasındaki gibi sistem yöneticisine başvurun. Yönetici parolanızı sıfırladığında ilk girişte yeni parola belirlemeniz istenir.',
+      'Parolanızı unuttuysanız giriş ekranındaki “Şifremi Unuttum” açıklamasındaki gibi sistem yöneticisine başvurun. Yönetici parolanızı sıfırladıktan sonra dilerseniz “Parolamı Değiştir” sayfasından kendi parolanızı belirleyebilirsiniz.',
       'Ortak bilgisayarlarda işiniz bittiğinde hesap menüsünden “Güvenli Çıkış” yapın.',
     ],
   },

@@ -395,9 +395,10 @@ Aynı kadro üç kurula da (Bölüm Kurulu, Bilgisayar Mühendisliği ABD, Bili�
 ABD) eklenir. Kurullar birbirinden bağımsızdır; üyelikler her kurulda ayrı düzenlenir.
 Girişten sonra son çalışılan kurul kendiliğinden açılır; kurul üst çubuktan değiştirilir.
 
-Üretimde yalnızca boş veritabanında çalışır: `admin` ilk girişte parolasını
-değiştirir; personel hesaplarının parolası rastgeledir ve yönetici tarafından
-Kullanıcılar sayfasından belirlenir.
+Üretimde yalnızca boş veritabanında çalışır. İlk girişte parola değiştirme
+zorunluluğu yoktur; personel hesaplarının parolası yönetici tarafından
+Kullanıcılar sayfasından belirlenir, kullanıcılar isterse "Parolamı Değiştir"
+sayfasından kendi parolasını değiştirir.
 
 ## Diyagramlar
 

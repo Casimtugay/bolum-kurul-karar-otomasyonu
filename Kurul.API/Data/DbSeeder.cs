@@ -8,8 +8,8 @@ namespace Kurul.API.Data;
 
 // Kurullar, roller, admin ve Bilgisayar Mühendisliği Bölüm Kurulu personelini yükler.
 // Geliştirmede herkes ortak geliştirme parolasıyla girer (aşağıda).
-// Üretimde yalnızca boş veritabanında çalışır; admin ilk girişte parolasını değiştirir,
-// personel hesaplarının parolası rastgeledir ve yönetici tarafından belirlenir.
+// Üretimde yalnızca boş veritabanında çalışır; personel hesaplarının parolası
+// yönetici tarafından belirlenir, kullanıcılar isterse kendi parolasını değiştirir.
 public static class DbSeeder
 {
     private const string DefaultPassword = "Password123!";
@@ -35,7 +35,6 @@ public static class DbSeeder
                 Username = username,
                 Email = email,
                 Role = role,
-                MustChangePassword = !isDevelopment,
                 IsActive = true
             };
 
